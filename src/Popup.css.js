@@ -1,7 +1,7 @@
 const styles = theme => ({
   wrapper: {
     width: "360px",
-    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px ${theme.spacing(1)}px`
+    padding: theme.spacing(3)
   },
   enableButton: {
     width: "6em",
@@ -10,6 +10,9 @@ const styles = theme => ({
     "& svg": {
       fontSize: "4em"
     }
+  },
+  tab: {
+    width: "100%"
   },
   label: {
     color: theme.palette.grey[600],
@@ -23,7 +26,7 @@ const styles = theme => ({
     marginTop: theme.spacing(0.5)
   },
   gridItemSpace: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
     paddingBottom: `0 !important`
   },
   gridItemVersion: {
@@ -32,15 +35,9 @@ const styles = theme => ({
   gridItemMVT: {
     paddingTop: `${theme.spacing(1.5)}px !important`
   },
-  gridItemUtilities: {
-    paddingTop: `${theme.spacing(2)}px !important`
+  gridItemStandard: {
+    paddingTop: `${theme.spacing(3)}px !important`
   },
-  utilityButtonsWrapper: {
-    marginTop: `${theme.spacing(1)}px !important`,
-    "&.hidden": {
-      display: "none"
-    }
-  }
 })
 
 export default styles

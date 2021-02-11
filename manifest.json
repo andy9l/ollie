@@ -2,7 +2,7 @@
   "description": "A web extension for Ensighten power users.",
   "manifest_version": 2,
   "name": "ollie",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "homepage_url": "https://andylockett.com",
   "icons": {
     "16": "images/icon16.png",
