@@ -63,7 +63,6 @@ chrome.webRequest.onBeforeRequest.addListener(
         }
       } else if (config.setting.domain.length && new RegExp(config.setting.domain).test(requestDetails.url)) {
         const parts = requestDetails.url.match(config.bootstrapPatternFirstParty);
-        console.log(requestDetails.url, parts);
         return {
           redirectUrl: `${parts[1]}://${parts[2]}${config.setting.version == 1 ? `-test` : ``}${parts[3]}/${config.setting.space}`.replace(/\/+/g, `/`)
         }
