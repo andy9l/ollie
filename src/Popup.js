@@ -33,7 +33,7 @@ class Popup extends Component {
     super(props)
     this.state = {
       ...StateStorageKeys,
-      loaded: false
+      loaded: false,
     }
   }
 
@@ -106,7 +106,7 @@ class Popup extends Component {
   render() {
     return (
       <React.Fragment>
-        <Grid container justify="center" spacing={2} className={this.props.classes.wrapper}>
+        <Grid container justify="center" spacing={2} className={`${this.props.classes.wrapper} ${this.props.darkMode ? "dark" : ""}`}>
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center">
               <Tooltip title={`${this.state.enabled ? 'Enabled' : 'Disabled'}`} placement="right">
@@ -122,7 +122,7 @@ class Popup extends Component {
           </Tabs>
           <Box hidden={this.state.tab !== 0} className={this.props.classes.tab}>
             <Grid item xs={12} className={this.props.classes.gridItemSpace}>
-              <OFieldWrapper reference="space" adornmentIcon={this.state.domain.length ? <PathIcon color={this.state.enabled ? "" : "disabled"} /> : <SpacesIcon color={this.state.enabled ? "" : "disabled"} />}>
+              <OFieldWrapper reference="space" adornmentIcon={this.state.domain.length ? <PathIcon color={this.state.enabled ? (this.state.space.length ? "primary" : "") : "disabled"} /> : <SpacesIcon color={this.state.enabled ? (this.state.space.length ? "primary" : "") : "disabled"} />}>
                 <OTextField
                   disabled={!this.state.enabled}
                   label={!this.state.domain.length ? "Ensighten Space" : "Full Bootstrap Path"}
@@ -152,8 +152,8 @@ class Popup extends Component {
               </Box>
             </Grid>
             <Grid item xs={12} className={this.props.classes.gridItemVersion}>
-              <OFieldWrapper reference="version" adornmentIcon={<VersionIcon color={this.state.enabled ? "" : "disabled"} />}>
-                <Typography variant="caption" className={this.props.classes.label}>Tag Version</Typography>
+              <OFieldWrapper reference="version" adornmentIcon={<VersionIcon color={this.state.enabled ? "primary" : "disabled"} />}>
+                <Typography variant="caption" className={`${this.props.classes.label} ${this.props.darkMode ? "dark" : ""} ${this.state.enabled ? "" : "disabled"}`}>Tag Version</Typography>
                 <ButtonGroup
                   color={this.state.enabled ? "primary" : "disabled"}
                   className={this.props.classes.buttonGroup}
@@ -167,7 +167,7 @@ class Popup extends Component {
               </OFieldWrapper>
             </Grid>
             <Grid item xs={12} className={this.props.classes.gridItemStandard}>
-              <OFieldWrapper reference="account" adornmentIcon={<AccountIcon color={this.state.enabled && !this.state.domain.length ? "" : "disabled"} />}>
+              <OFieldWrapper reference="account" adornmentIcon={<AccountIcon color={this.state.enabled && !this.state.domain.length ? (this.state.account.length ? "primary" : "") : "disabled"} />}>
                 <OTextField
                   disabled={!this.state.enabled || this.state.domain.length}
                   label="Ensighten Account"
@@ -181,7 +181,7 @@ class Popup extends Component {
               </OFieldWrapper>
             </Grid>
             <Grid item xs={12} className={this.props.classes.gridItemStandard}>
-              <OFieldWrapper reference="domain" adornmentIcon={<DomainIcon color={this.state.enabled ? "" : "disabled"} />}>
+              <OFieldWrapper reference="domain" adornmentIcon={<DomainIcon color={this.state.enabled ? (this.state.domain.length ? "primary" : "") : "disabled"} />}>
                 <OTextField
                   disabled={!this.state.enabled}
                   label="Ensighten Bootstrap Domain"
@@ -236,8 +236,8 @@ class Popup extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} className={this.props.classes.gridItemStandard}>
-              <OFieldWrapper reference="mvt" adornmentIcon={<MVTIcon />}>
-                <Typography variant="caption" className={this.props.classes.label}>MVT Test Audience</Typography>
+              <OFieldWrapper reference="mvt" adornmentIcon={<MVTIcon color={(this.state.mvt ? "secondary" : "")} />}>
+                <Typography variant="caption" className={`${this.props.classes.label} ${this.props.darkMode ? "dark" : ""}`}>MVT Test Audience</Typography>
                 <ButtonGroup color="secondary" className={this.props.classes.buttonGroup} disabled={!this.state.loaded} disableElevation fullWidth size="small">
                   <Button onClick={() => this.onChangeMVT(1)} variant={this.state.mvt === 1 ? "contained" : "outlined"}>Enabled</Button>
                   <Button onClick={() => this.onChangeMVT(0)} variant={this.state.mvt === 0 ? "contained" : "outlined"}>Disabled</Button>

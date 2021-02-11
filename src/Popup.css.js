@@ -1,7 +1,13 @@
+import { grey } from "@material-ui/core/colors"
+
 const styles = theme => ({
   wrapper: {
     width: "360px",
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
+    "&.dark": {
+      background: grey[900],
+      color: grey[50]
+    }
   },
   enableButton: {
     width: "6em",
@@ -15,9 +21,18 @@ const styles = theme => ({
     width: "100%"
   },
   label: {
-    color: theme.palette.grey[600],
+    color: "rgba(0, 0, 0, 0.7)",
     transform: "scale(0.75)",
-    letterSpacing: "normal"
+    letterSpacing: "normal",
+    "&.disabled": {
+      color: "rgba(0, 0, 0, 0.5)"
+    },
+    "&.dark": {
+      color: "rgba(255, 255, 255, 0.7)",
+      "&.disabled": {
+        color: "rgba(255, 255, 255, 0.5)"
+      }
+    }
   },
   spaceChips: {
     marginTop: "0.35em"
