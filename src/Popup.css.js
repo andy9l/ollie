@@ -22,11 +22,11 @@ const styles = theme => ({
     width: "100%"
   },
   label: {
-    color: "rgba(0, 0, 0, 0.7)",
+    color: "rgba(0, 0, 0, 0.54)",
     transform: "scale(0.75)",
     letterSpacing: "normal",
     "&.disabled": {
-      color: "rgba(0, 0, 0, 0.5)"
+      color: "rgba(0, 0, 0, 0.38)"
     },
     "&.dark": {
       color: "rgba(255, 255, 255, 0.7)",

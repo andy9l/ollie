@@ -1,6 +1,6 @@
 window.ollieHelper = (() => {
 
-  let _private = {}, _public = {};
+  let _private = {};
 
   _private.store = {
     mvtQAKey: `__MVT_QA__`
@@ -116,7 +116,5 @@ window.ollieHelper = (() => {
   };
 
   _private.init();
-
-  return _public;
 
 })();

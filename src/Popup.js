@@ -1,6 +1,7 @@
 import { Box, Button, Grid, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import React, { Component } from 'react';
+import OTab from './components/OTab';
 import TabRewrite from './containers/tab.rewrite';
 import TabUtilities from './containers/tab.utilities';
 import styles from './Popup.css';
@@ -72,24 +73,26 @@ class Popup extends Component {
               <Tab label="Utilities" />
             </Tabs>
           </Grid>
-          <TabRewrite
-            hidden={this.state.tab !== 0}
-            darkMode={this.props.darkMode}
-            loaded={this.state.loaded}
-            enabled={this.state.enabled}
-            space={this.state.space}
-            account={this.state.account}
-            domain={this.state.domain}
-            version={this.state.version}
-            setChromeStorage={this.setChromeStorage.bind(this)}
-          />
-          <TabUtilities
-            hidden={this.state.tab !== 1}
-            darkMode={this.props.darkMode}
-            loaded={this.state.loaded}
-            mvt={this.state.mvt}
-            setChromeStorage={this.setChromeStorage.bind(this)}
-          />
+          <OTab hidden={this.state.tab !== 0}>
+            <TabRewrite
+              darkMode={this.props.darkMode}
+              loaded={this.state.loaded}
+              enabled={this.state.enabled}
+              space={this.state.space}
+              account={this.state.account}
+              domain={this.state.domain}
+              version={this.state.version}
+              setChromeStorage={this.setChromeStorage.bind(this)}
+            />
+          </OTab>
+          <OTab hidden={this.state.tab !== 1}>
+            <TabUtilities
+              darkMode={this.props.darkMode}
+              loaded={this.state.loaded}
+              mvt={this.state.mvt}
+              setChromeStorage={this.setChromeStorage.bind(this)}
+            />
+          </OTab>
         </Grid>
       </React.Fragment >
     )
