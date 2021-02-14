@@ -1,8 +1,9 @@
 let config = {
   bootstrapPattern: /(http|https):\/\/nexus(-test|\d{1})?\.ensighten\.com\/([^\/]+)\/([^\/]*)\/?Bootstrap\.js/,
+  bootstrapPatternFirstParty: /(http|https):\/\/([^\.]+)(\.[^\/]+)/,
   egifPattern: /.+error\/e\.gif\?msg=.+/,
   defaultSpace: `prod`,
-  storageKeys: [`enabled`, `space`, `account`, `version`, `mvt`],
+  storageKeys: [`enabled`, `space`, `account`, `domain`, `version`, `mvt`],
   setting: {}
 };
 
@@ -37,29 +38,37 @@ const Utilities = {
 
 chrome.webRequest.onBeforeRequest.addListener(
   requestDetails => {
-    if (config.setting.enabled && !/ManageUI/.test(requestDetails.url) && config.bootstrapPattern.test(requestDetails.url)) {
-      const parts = requestDetails.url.match(config.bootstrapPattern);
-      if (!parts[4]) parts[4] = config.defaultSpace;
-      const getRewrittenBootstrap = bootstrap => {
-        if (bootstrap && bootstrap == 1) return `nexus-test`;
-        return `nexus`;
-      }
-      const getRewrittenSpace = space => {
-        if (space && space.length) {
-          if (space === `*stage`) return parts[4].replace(/prod/, `stage`);
-          if (space === `*prod`) return parts[4].replace(/stage/, `prod`);
-          return space;
+    if (config.setting.enabled) {
+      if (!config.setting.domain.length && !/ManageUI/.test(requestDetails.url) && config.bootstrapPattern.test(requestDetails.url)) {
+        const parts = requestDetails.url.match(config.bootstrapPattern);
+        if (!parts[4]) parts[4] = config.defaultSpace;
+        const getRewrittenBootstrap = bootstrap => {
+          if (bootstrap && bootstrap == 1) return `nexus-test`;
+          return `nexus`;
         }
-        return parts[4];
-      };
-      const getRewrittenAccount = account => {
-        if (account && account.length) return account;
-        else return parts[3];
-      };
-      return {
-        redirectUrl: `${parts[1]}://${getRewrittenBootstrap(config.setting.version)}.ensighten.com/${getRewrittenAccount(config.setting.account)}/${getRewrittenSpace(config.setting.space)}/Bootstrap.js?r=1`
+        const getRewrittenSpace = space => {
+          if (space && space.length) {
+            if (space === `*stage`) return parts[4].replace(/prod/, `stage`);
+            if (space === `*prod`) return parts[4].replace(/stage/, `prod`);
+            return space;
+          }
+          return parts[4];
+        };
+        const getRewrittenAccount = account => {
+          if (account && account.length) return account;
+          else return parts[3];
+        };
+        return {
+          redirectUrl: `${parts[1]}://${getRewrittenBootstrap(config.setting.version)}.ensighten.com/${getRewrittenAccount(config.setting.account)}/${getRewrittenSpace(config.setting.space)}/Bootstrap.js?r=${new Date().getTime()}`
+        }
+      } else if (config.setting.domain.length && new RegExp(config.setting.domain).test(requestDetails.url)) {
+        const parts = requestDetails.url.match(config.bootstrapPatternFirstParty);
+        return {
+          redirectUrl: `${parts[1]}://${parts[2]}${config.setting.version == 1 ? `-test` : ``}${parts[3]}/${config.setting.space}`.replace(/\/+/g, `/`)
+        }
       }
-    } else if (config.egifPattern.test(requestDetails.url) && !/ensighten/.test(requestDetails.originUrl || requestDetails.initiator)) {
+    }
+    if (config.egifPattern.test(requestDetails.url) && !/ensighten/.test(requestDetails.originUrl || requestDetails.initiator)) {
       Notifications.send(`Ensighten e.gif error(s) detected - check network tab for details.`, `ollie`);
     }
   },
@@ -89,6 +98,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     });
   }
+});
+
+chrome.commands.onCommand.addListener(command => {
+  if (command === "toggle") chrome.storage.local.set({ enabled: !config.setting.enabled });
 });
 
 chrome.notifications.onClicked.addListener(Notifications.clearNotification);
