@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@material-ui/core';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Popup from './Popup';
@@ -8,6 +8,7 @@ const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: 
 
 ReactDOM.render(
   <React.Fragment>
+    <CssBaseline />
     <ThemeProvider theme={darkMode ? theme.dark : theme.light}>
       <Popup darkMode={darkMode} />
     </ThemeProvider>

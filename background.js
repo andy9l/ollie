@@ -100,6 +100,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+chrome.commands.onCommand.addListener(command => {
+  if (command === "toggle") chrome.storage.local.set({ enabled: !config.setting.enabled });
+});
+
 chrome.notifications.onClicked.addListener(Notifications.clearNotification);
 chrome.storage.onChanged.addListener(Utilities.refreshConfig);
 

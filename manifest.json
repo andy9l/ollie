@@ -42,5 +42,19 @@
     "default_title": "ollie",
     "default_popup": "popup/index.html"
   },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Alt+O"
+      },
+      "description": "Show/hide ollie popup"
+    },
+    "toggle": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
+      "description": "Toggle ollie's rewrite feature"
+    }
+  },
   "content_security_policy": "script-src 'self' 'sha256-16K5LI5pBqMBouxDwoszTfE+TPdYz2PQpfYh73iEK64='; object-src 'self'"
 }

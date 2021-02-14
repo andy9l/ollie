@@ -13,6 +13,7 @@ const styles = theme => ({
     width: "6em",
     height: "6em",
     borderRadius: "6em",
+    marginBottom: theme.spacing(2),
     "& svg": {
       fontSize: "4em"
     }
@@ -37,21 +38,14 @@ const styles = theme => ({
   spaceChips: {
     marginTop: "0.35em"
   },
-  buttonGroup: {
-    marginTop: theme.spacing(0.5)
+  tabWrapper: {
+    marginTop: theme.spacing(2)
   },
-  gridItemSpace: {
-    marginTop: theme.spacing(3),
-    paddingBottom: `0 !important`
+  tagVersion: {
+    marginTop: -theme.spacing(2)
   },
-  gridItemVersion: {
-    paddingTop: `0 !important`
-  },
-  gridItemMVT: {
-    paddingTop: `${theme.spacing(1.5)}px !important`
-  },
-  gridItemStandard: {
-    paddingTop: `${theme.spacing(3)}px !important`
+  mvt: {
+    marginTop: theme.spacing(2)
   },
 })
 
