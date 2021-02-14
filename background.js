@@ -39,7 +39,7 @@ const Utilities = {
 chrome.webRequest.onBeforeRequest.addListener(
   requestDetails => {
     if (config.setting.enabled) {
-      if (!config.setting.domain.length && !/ManageUI/.test(requestDetails.url) && config.bootstrapPattern.test(requestDetails.url)) {
+      if (!config.setting.domain && !/ManageUI/.test(requestDetails.url) && config.bootstrapPattern.test(requestDetails.url)) {
         const parts = requestDetails.url.match(config.bootstrapPattern);
         if (!parts[4]) parts[4] = config.defaultSpace;
         const getRewrittenBootstrap = bootstrap => {
@@ -61,7 +61,7 @@ chrome.webRequest.onBeforeRequest.addListener(
         return {
           redirectUrl: `${parts[1]}://${getRewrittenBootstrap(config.setting.version)}.ensighten.com/${getRewrittenAccount(config.setting.account)}/${getRewrittenSpace(config.setting.space)}/Bootstrap.js?r=${new Date().getTime()}`
         }
-      } else if (config.setting.domain.length && new RegExp(config.setting.domain).test(requestDetails.url)) {
+      } else if (config.setting.domain && new RegExp(config.setting.domain).test(requestDetails.url)) {
         const parts = requestDetails.url.match(config.bootstrapPatternFirstParty);
         return {
           redirectUrl: `${parts[1]}://${parts[2]}${config.setting.version == 1 ? `-test` : ``}${parts[3]}/${config.setting.space}`.replace(/\/+/g, `/`)
