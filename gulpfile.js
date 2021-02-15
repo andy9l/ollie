@@ -14,29 +14,30 @@ function copyPopupFiles(cb) {
     `!./build/static/**/runtime-*.js`
   ], { base: './build' })
     .pipe(dest(`./release/popup`))
-  cb()
+    .on('end', cb)
 }
 
 function copyExtensionJSFiles(cb) {
   src([
-    `./*.js`,
-    `!./gulpfile.js`
+    `./src/background.js`,
+    `./src/content_script.js`,
+    `./src/helper.js`,
   ])
     .pipe(uglify())
     .pipe(dest(`./release`))
-  cb()
+    .on('end', cb)
 }
 
 function copyExtensionManifest(cb) {
   src(`./manifest.json`)
     .pipe(dest(`./release`))
-  cb()
+    .on('end', cb)
 }
 
 function copyImages(cb) {
   src(`./images/*.png`)
     .pipe(dest(`./release/images`))
-  cb()
+    .on('end', cb)
 }
 
 exports.default = series(cleanReleaseFolder, copyPopupFiles, copyExtensionJSFiles, copyExtensionManifest, copyImages)
