@@ -11,6 +11,7 @@ const StateStorageKeys = {
   space: "",
   account: "",
   domain: "",
+  path: "",
   version: 0,
   mvt: 0,
   tab: 0,
@@ -81,6 +82,7 @@ class Popup extends Component {
               space={this.state.space}
               account={this.state.account}
               domain={this.state.domain}
+              path={this.state.path}
               version={this.state.version}
               setChromeStorage={this.setChromeStorage.bind(this)}
             />

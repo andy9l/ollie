@@ -43,11 +43,11 @@ class TabRewrite extends PureComponent {
 
       <Grid container spacing={3}>
         <Grid item xs={12} hidden={this.props.hidden}>
-          <OFieldWrapper reference="space" adornmentIcon={this.props.domain.length ? <PathIcon color={this.props.enabled ? (this.props.space.length ? "primary" : "") : "disabled"} /> : <SpacesIcon color={this.props.enabled ? (this.props.space.length ? "primary" : "") : "disabled"} />}>
+          <OFieldWrapper reference="space" adornmentIcon={<SpacesIcon color={this.props.enabled ? (this.props.space.length ? "primary" : "") : "disabled"} />}>
             <OTextField
               disabled={!this.props.enabled}
-              label={!this.props.domain.length ? "Ensighten Space" : "Full Ensighten Bootstrap Path"}
-              placeholder={!this.props.domain.length ? "Default" : "/"}
+              label={"Ensighten Space"}
+              placeholder={"Default"}
               reference="space"
               value={this.props.space}
               onChange={this.onChangeOTextField.bind(this)}
@@ -57,14 +57,14 @@ class TabRewrite extends PureComponent {
           </OFieldWrapper>
           <Box display="flex" justifyContent="flex-end" className={this.props.classes.spaceChips}>
             <Chip
-              disabled={!this.props.enabled || this.props.domain.length}
+              disabled={!this.props.enabled}
               size="small"
               color={this.props.space === "*stage" ? "primary" : "default"}
               label="*stage"
               onClick={() => { if (this.props.enabled) this.forceSpace("*stage") }}
             />
             <Chip
-              disabled={!this.props.enabled || this.props.domain.length}
+              disabled={!this.props.enabled}
               size="small"
               color={this.props.space === "*prod" ? "primary" : "default"}
               label="*prod"
@@ -87,9 +87,9 @@ class TabRewrite extends PureComponent {
           </OFieldWrapper>
         </Grid>
         <Grid item xs={12}>
-          <OFieldWrapper reference="account" adornmentIcon={<AccountIcon color={this.props.enabled && !this.props.domain.length ? (this.props.account.length ? "primary" : "") : "disabled"} />}>
+          <OFieldWrapper reference="account" adornmentIcon={<AccountIcon color={this.props.enabled ? (this.props.account.length ? "primary" : "") : "disabled"} />}>
             <OTextField
-              disabled={!this.props.enabled || this.props.domain.length}
+              disabled={!this.props.enabled}
               label="Ensighten Account"
               placeholder="Default"
               reference="account"
@@ -101,13 +101,27 @@ class TabRewrite extends PureComponent {
           </OFieldWrapper>
         </Grid>
         <Grid item xs={12}>
-          <OFieldWrapper reference="domain" adornmentIcon={<DomainIcon color={this.props.enabled ? (this.props.domain.length ? "primary" : "") : "disabled"} />}>
+          <OFieldWrapper reference="domain" adornmentIcon={<DomainIcon color={this.props.enabled ? (this.props.domain.length && this.props.path.length ? "primary" : "") : "disabled"} />}>
             <OTextField
               disabled={!this.props.enabled}
-              label="Ensighten Bootstrap Domain"
-              placeholder="nexus.ensighten.com"
+              label="First-Party Bootstrap Domain"
+              placeholder="tags.example.com"
               reference="domain"
               value={this.props.domain}
+              onChange={this.onChangeOTextField.bind(this)}
+              onClear={this.onClearOTextField.bind(this)}
+              onKeyDown={this.onKeyDownOTextField.bind(this)}
+            />
+          </OFieldWrapper>
+        </Grid>
+        <Grid item xs={12}>
+          <OFieldWrapper reference="path" adornmentIcon={<PathIcon color={this.props.enabled ? (this.props.domain.length && this.props.path.length ? "primary" : "") : "disabled"} />}>
+            <OTextField
+              disabled={!this.props.enabled}
+              label="First-Party Bootstrap Path"
+              placeholder="/"
+              reference="path"
+              value={this.props.path}
               onChange={this.onChangeOTextField.bind(this)}
               onClear={this.onClearOTextField.bind(this)}
               onKeyDown={this.onKeyDownOTextField.bind(this)}
