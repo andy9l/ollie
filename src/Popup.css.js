@@ -3,7 +3,7 @@ import { grey } from "@material-ui/core/colors"
 const styles = theme => ({
   wrapper: {
     width: "360px",
-    padding: theme.spacing(3),
+    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(4)}px`,
     "&.dark": {
       background: grey[900],
       color: grey[50]
@@ -36,7 +36,10 @@ const styles = theme => ({
     }
   },
   spaceChips: {
-    marginTop: "0.35em"
+    marginTop: "0.35em",
+    "& > div:first-child": {
+      marginRight: theme.spacing(0.5)
+    }
   },
   tabWrapper: {
     marginTop: theme.spacing(2)

@@ -114,7 +114,7 @@ class TabRewrite extends PureComponent {
             />
           </OFieldWrapper>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} hidden={!this.props.domain.length}>
           <OFieldWrapper reference="path" adornmentIcon={<PathIcon color={this.props.enabled ? (this.props.domain.length && this.props.path.length ? "primary" : "") : "disabled"} />}>
             <OTextField
               disabled={!this.props.enabled}
