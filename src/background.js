@@ -1,5 +1,5 @@
 let config = {
-  bootstrapPattern: /(http|https):\/\/nexus(-test|\d{1})?\.ensighten\.com\/([^\/]+)\/([^\/]*)\/?Bootstrap\.js/,
+  bootstrapPattern: /(http|https):\/\/nexus(-test|\d{1})?\.ensighten\.com\/([^\/]+)\/([^\/]*)\/?Bootstrap\.js(?!\?r=\d+)/,
   bootstrapPatternFirstParty: /(http|https):\/\/([^\.]+)(\.[^\/]+)/,
   egifPattern: /.+error\/e\.gif\?msg=.+/,
   defaultSpace: `prod`,
