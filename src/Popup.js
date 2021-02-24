@@ -1,5 +1,6 @@
 import { Box, Button, Grid, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import BlockIcon from '@material-ui/icons/Block';
 import React, { Component } from 'react';
 import OTab from './components/OTab';
 import TabRewrite from './containers/tab.rewrite';
@@ -13,6 +14,7 @@ const StateStorageKeys = {
   domain: "",
   path: "",
   version: 0,
+  blocking: false,
   mvt: 0,
   tab: 0,
 }
@@ -24,6 +26,7 @@ class Popup extends Component {
     this.state = {
       ...StateStorageKeys,
       loaded: false,
+      toggleMouseDownTime: 0
     }
   }
 
@@ -48,7 +51,14 @@ class Popup extends Component {
   }
 
   toggle() {
-    this.setChromeStorage({ enabled: !this.state.enabled })
+    if (this.state.toggleMouseDownTime > 0 && new Date().getTime() - this.state.toggleMouseDownTime > 500)
+      this.setChromeStorage({ enabled: this.state.enabled || !this.state.blocking, blocking: !this.state.blocking, toggleMouseDownTime: 0 })
+    else
+      this.setChromeStorage({ enabled: !this.state.enabled || this.state.blocking, blocking: false, toggleMouseDownTime: 0 })
+  }
+
+  toggleMouseDown() {
+    this.setState({ toggleMouseDownTime: new Date().getTime() })
   }
 
   onTabChange(e, tab) {
@@ -61,9 +71,15 @@ class Popup extends Component {
         <Grid container justify="center" className={`${this.props.classes.wrapper} ${this.props.darkMode ? "dark" : ""}`}>
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center">
-              <Tooltip title={`${this.state.enabled ? 'Enabled' : 'Disabled'}`} placement="right">
-                <Button variant="contained" disabled={!this.state.loaded} onClick={this.toggle.bind(this)} color={this.state.enabled ? 'primary' : 'secondary'} className={this.props.classes.enableButton}>
-                  <PowerSettingsNewIcon />
+              <Tooltip title={`${this.state.enabled ? (this.state.blocking ? 'Blocking' : 'Enabled') : 'Disabled'}`} placement="right">
+                <Button
+                  variant="contained"
+                  disabled={!this.state.loaded}
+                  onClick={this.toggle.bind(this)}
+                  onMouseDown={this.toggleMouseDown.bind(this)}
+                  color={this.state.enabled ? 'primary' : 'secondary'}
+                  className={this.props.classes.enableButton}>
+                  {!this.state.blocking ? <PowerSettingsNewIcon /> : <BlockIcon />}
                 </Button>
               </Tooltip>
             </Box>
@@ -78,7 +94,7 @@ class Popup extends Component {
             <TabRewrite
               darkMode={this.props.darkMode}
               loaded={this.state.loaded}
-              enabled={this.state.enabled}
+              enabled={this.state.enabled && !this.state.blocking}
               space={this.state.space}
               account={this.state.account}
               domain={this.state.domain}
