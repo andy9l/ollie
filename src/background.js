@@ -65,8 +65,11 @@ chrome.webRequest.onBeforeRequest.addListener(
       } else if (config.setting.domain && config.setting.path && new RegExp(config.setting.domain).test(requestDetails.url)) {
         if (config.setting.blocking) return { cancel: true };
         const parts = requestDetails.url.match(config.bootstrapPatternFirstParty);
-        return {
-          redirectUrl: `${parts[1]}://${parts[2]}${config.setting.version == 1 ? `-test` : ``}${parts[3]}/${config.setting.path}`.replace(/\/+/g, `/`)
+        const subdomain = `${parts[2]}${config.setting.version == 1 ? `-test` : ``}`
+        if (!new RegExp(subdomain).test(requestDetails.url) || !new RegExp(config.setting.path).test(requestDetails.url)) {
+          return {
+            redirectUrl: `${parts[1]}://${subdomain}${parts[3]}/${config.setting.path}`.replace(/\/+/g, `/`)
+          }
         }
       }
     }
