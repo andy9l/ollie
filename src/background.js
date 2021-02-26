@@ -81,7 +81,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     urls: [
       `*://*/*`
     ],
-    types: []
+    types: ["script", "image"]
   },
   [`blocking`]
 );
