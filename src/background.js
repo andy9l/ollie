@@ -1,9 +1,9 @@
 let config = {
-  bootstrapPattern: /(http|https):\/\/nexus(-test|\d{1})?\.ensighten\.com\/([^\/]+)\/([^\/]*)\/?Bootstrap\.js/,
+  bootstrapPattern: /(http|https):\/\/nexus(-test|\d{1})?\.ensighten\.com\/([^\/]+)\/([^\/]*)\/?Bootstrap\.js(?!\?r=\d+)/,
   bootstrapPatternFirstParty: /(http|https):\/\/([^\.]+)(\.[^\/]+)/,
   egifPattern: /.+error\/e\.gif\?msg=.+/,
   defaultSpace: `prod`,
-  storageKeys: [`enabled`, `space`, `account`, `domain`, `version`, `mvt`],
+  storageKeys: [`enabled`, `space`, `account`, `domain`, `path`, `version`, `blocking`, `mvt`],
   setting: {}
 };
 
@@ -39,7 +39,8 @@ const Utilities = {
 chrome.webRequest.onBeforeRequest.addListener(
   requestDetails => {
     if (config.setting.enabled) {
-      if (!config.setting.domain && !/ManageUI/.test(requestDetails.url) && config.bootstrapPattern.test(requestDetails.url)) {
+      if (!/ManageUI/.test(requestDetails.url) && config.bootstrapPattern.test(requestDetails.url)) {
+        if (config.setting.blocking) return { cancel: true };
         const parts = requestDetails.url.match(config.bootstrapPattern);
         if (!parts[4]) parts[4] = config.defaultSpace;
         const getRewrittenBootstrap = bootstrap => {
@@ -61,10 +62,14 @@ chrome.webRequest.onBeforeRequest.addListener(
         return {
           redirectUrl: `${parts[1]}://${getRewrittenBootstrap(config.setting.version)}.ensighten.com/${getRewrittenAccount(config.setting.account)}/${getRewrittenSpace(config.setting.space)}/Bootstrap.js?r=${new Date().getTime()}`
         }
-      } else if (config.setting.domain && new RegExp(config.setting.domain).test(requestDetails.url)) {
+      } else if (config.setting.domain && config.setting.path && new RegExp(config.setting.domain).test(requestDetails.url)) {
+        if (config.setting.blocking) return { cancel: true };
         const parts = requestDetails.url.match(config.bootstrapPatternFirstParty);
-        return {
-          redirectUrl: `${parts[1]}://${parts[2]}${config.setting.version == 1 ? `-test` : ``}${parts[3]}/${config.setting.space}`.replace(/\/+/g, `/`)
+        const subdomain = `${parts[2]}${config.setting.version == 1 ? `-test` : ``}`
+        if (!new RegExp(subdomain).test(requestDetails.url) || !new RegExp(config.setting.path).test(requestDetails.url)) {
+          return {
+            redirectUrl: `${parts[1]}://${subdomain}${parts[3]}/${config.setting.path}`.replace(/\/+/g, `/`)
+          }
         }
       }
     }
@@ -76,7 +81,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     urls: [
       `*://*/*`
     ],
-    types: []
+    types: ["script", "image"]
   },
   [`blocking`]
 );
