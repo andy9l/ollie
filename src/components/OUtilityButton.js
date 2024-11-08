@@ -6,7 +6,7 @@ const styles = theme => ({})
 class OUtilityButton extends PureComponent {
   render() {
     return (
-      <Button variant="outlined" fullWidth size="small" color="secondary" onClick={this.props.onClick} startIcon={this.props.icon}>
+      <Button variant="outlined" fullWidth size="small" color="primary" onClick={this.props.onClick} startIcon={this.props.icon}>
         {this.props.title}
       </Button>
     )

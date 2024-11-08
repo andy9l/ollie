@@ -1,6 +1,7 @@
 const { src, dest, series } = require('gulp')
 const del = require('del')
 const uglify = require('gulp-terser')
+const concat = require('gulp-concat')
 
 function cleanReleaseFolder(cb) {
   del.sync(`./release/**`, { force: true })
@@ -19,12 +20,21 @@ function copyPopupFiles(cb) {
 
 function copyExtensionJSFiles(cb) {
   src([
-    `./src/background.js`,
+    `./src/service_worker.js`,
     `./src/content_script.js`,
     `./src/helper.js`,
   ])
     .pipe(uglify())
     .pipe(dest(`./release`))
+    .on('end', cb)
+}
+
+function copyModules(cb) {
+  src([
+    `./src/modules/*.js`
+  ])
+    .pipe(uglify())
+    .pipe(dest(`./release/modules`))
     .on('end', cb)
 }
 
@@ -35,9 +45,9 @@ function copyExtensionManifest(cb) {
 }
 
 function copyImages(cb) {
-  src(`./images/*.png`)
+  src(`./images/*.png`, { encoding: false })
     .pipe(dest(`./release/images`))
     .on('end', cb)
 }
 
-exports.default = series(cleanReleaseFolder, copyPopupFiles, copyExtensionJSFiles, copyExtensionManifest, copyImages)
+exports.default = series(cleanReleaseFolder, copyPopupFiles, copyExtensionJSFiles, copyModules, copyExtensionManifest, copyImages)

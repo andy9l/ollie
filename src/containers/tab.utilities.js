@@ -68,9 +68,9 @@ class TabUtilities extends PureComponent {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} className={this.props.classes.mvt}>
-            <OFieldWrapper reference="mvt" adornmentIcon={<MVTIcon color={(this.props.mvt ? "secondary" : "")} />}>
+            <OFieldWrapper reference="mvt" adornmentIcon={<MVTIcon color={(this.props.mvt ? "primary" : "")} />}>
               <Typography variant="caption" className={`${this.props.classes.label} ${this.props.darkMode ? "dark" : ""}`}>MVT Test Audience</Typography>
-              <ButtonGroup color="secondary" disabled={!this.props.loaded} disableElevation fullWidth size="small">
+              <ButtonGroup color="primary" disabled={!this.props.loaded} disableElevation fullWidth size="small">
                 <Button onClick={() => this.onChangeMVT(1)} variant={this.props.mvt === 1 ? "contained" : "outlined"}>Enabled</Button>
                 <Button onClick={() => this.onChangeMVT(0)} variant={this.props.mvt === 0 ? "contained" : "outlined"}>Disabled</Button>
               </ButtonGroup>

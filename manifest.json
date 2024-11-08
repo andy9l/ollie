@@ -1,9 +1,9 @@
 {
   "description": "A web extension for Ensighten power users.",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "ollie",
-  "version": "1.1.1",
-  "homepage_url": "https://andylockett.com",
+  "version": "1.2.0",
+  "homepage_url": "https://github.com/andy9l/ollie",
   "icons": {
     "16": "images/icon16.png",
     "48": "images/icon48.png",
@@ -14,15 +14,17 @@
     "notifications",
     "tabs",
     "webRequest",
-    "webRequestBlocking",
+    "webNavigation",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
     "http://*/*",
     "https://*/*",
     "file://*/*"
   ],
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "service_worker": "service_worker.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -31,19 +33,34 @@
         "https://*/*",
         "file://*/*"
       ],
-      "js": ["content_script.js"]
+      "js": [
+        "content_script.js"
+      ]
     }
   ],
   "web_accessible_resources": [
-    "helper.js"
+    {
+      "resources": [
+        "helper.js"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*",
+        "file://*/*"
+      ]
+    }
   ],
-  "browser_action": {
-    "default_icon": "images/icon128-grey.png",
+  "action": {
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    },
     "default_title": "ollie",
     "default_popup": "popup/index.html"
   },
   "commands": {
-    "_execute_browser_action": {
+    "_execute_action": {
       "suggested_key": {
         "default": "Alt+O"
       },
@@ -55,6 +72,5 @@
       },
       "description": "Toggle ollie's rewrite feature"
     }
-  },
-  "content_security_policy": "script-src 'self' 'sha256-16K5LI5pBqMBouxDwoszTfE+TPdYz2PQpfYh73iEK64='; object-src 'self'"
+  }
 }

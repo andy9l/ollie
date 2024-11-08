@@ -4,6 +4,7 @@ const styles = theme => ({
   wrapper: {
     width: "360px",
     padding: `${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(4)}px`,
+    background: '#f7feff',
     "&.dark": {
       background: grey[900],
       color: grey[50]

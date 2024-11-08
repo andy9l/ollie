@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Popup from './Popup';
 import theme from './theme';
 
-const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+const darkMode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
 
 ReactDOM.render(
   <React.Fragment>

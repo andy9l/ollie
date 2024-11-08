@@ -12,6 +12,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 const injectHelperScript = (() => {
   let script = document.createElement(`script`);
-  script.src = chrome.extension.getURL(`/helper.js`);
+  script.src = chrome.runtime.getURL(`/helper.js`);
   document.body.appendChild(script);
 })();
