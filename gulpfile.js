@@ -1,7 +1,6 @@
 const { src, dest, series } = require('gulp')
 const del = require('del')
 const uglify = require('gulp-terser')
-const concat = require('gulp-concat')
 
 function cleanReleaseFolder(cb) {
   del.sync(`./release/**`, { force: true })
