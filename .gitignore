@@ -4,4 +4,4 @@ build
 release
 package-lock.json
 release
-releases
+_releases
