@@ -11,8 +11,7 @@
     "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "build": "GENERATE_SOURCEMAP=false react-scripts build && npx gulp",
-    "eject": "react-scripts eject"
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && npx gulp"
   },
   "eslintConfig": {
     "extends": "react-app"

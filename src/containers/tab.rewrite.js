@@ -104,7 +104,7 @@ class TabRewrite extends PureComponent {
           <OFieldWrapper reference="fpfrom" adornmentIcon={<FpFromIcon color={this.props.enabled ? (this.props.fpfrom.length && this.props.fpto.length ? "primary" : "") : "disabled"} />}>
             <OTextField
               disabled={!this.props.enabled}
-              label="First-Party Bootstrap Path"
+              label="First-Party Bootstrap Domain & Path"
               placeholder="tags.example.com/path/Bootstrap.js"
               reference="fpfrom"
               value={this.props.fpfrom}
@@ -118,7 +118,7 @@ class TabRewrite extends PureComponent {
           <OFieldWrapper reference="fpto" adornmentIcon={<FpToIcon color={this.props.enabled ? (this.props.fpfrom.length && this.props.fpto.length ? "primary" : "") : "disabled"} />}>
             <OTextField
               disabled={!this.props.enabled}
-              label="Rewrite First-Party Bootstrap"
+              label="First-Party Rewrite Path"
               placeholder="/new/path/Bootstrap.js"
               reference="fpto"
               value={this.props.fpto}

@@ -16,6 +16,7 @@ const StateStorageKeys = {
   version: 0,
   blocking: false,
   mvt: 0,
+  notifications: 0,
   tab: 0,
 }
 
@@ -108,6 +109,7 @@ class Popup extends Component {
               darkMode={this.props.darkMode}
               loaded={this.state.loaded}
               mvt={this.state.mvt}
+              notifications={this.state.notifications}
               setChromeStorage={this.setChromeStorage.bind(this)}
             />
           </OTab>

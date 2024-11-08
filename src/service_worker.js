@@ -5,7 +5,7 @@ import { ODeclarativeNetRequestManager } from "./modules/ODeclarativeNetRequestM
 let config = {
   defaultDomain: `nexus.ensighten.com`,
   egifPattern: /.+error\/e\.gif\?msg=.+/,
-  storageKeys: [`enabled`, `space`, `account`, `fpfrom`, `fpto`, `version`, `blocking`, `mvt`],
+  storageKeys: [`enabled`, `space`, `account`, `fpfrom`, `fpto`, `version`, `blocking`, `mvt`, `notifications`],
   setting: {}
 };
 
@@ -17,15 +17,13 @@ chrome.webNavigation.onBeforeNavigate.addListener(
 
 chrome.webRequest.onBeforeRequest.addListener(
   requestDetails => {
-    if (config.egifPattern.test(requestDetails.url) && !/ensighten/.test(requestDetails.originUrl || requestDetails.initiator)) {
+    if (config.setting.notifications && config.egifPattern.test(requestDetails.url) && !/ensighten/.test(requestDetails.originUrl || requestDetails.initiator)) {
       ONotifications.send(`Ensighten e.gif error(s) detected - check network tab for details.`, `ollie`);
     }
   },
   {
-    urls: [
-      `*://*/*`
-    ],
-    types: ["image"]
+    urls: [`*://*/*`],
+    types: [`image`]
   }
 );
 

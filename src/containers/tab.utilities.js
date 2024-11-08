@@ -2,6 +2,7 @@ import { Button, ButtonGroup, Grid, Typography, withStyles } from '@material-ui/
 import ListTagsIcon from '@material-ui/icons/Assignment';
 import TestTagIcon from '@material-ui/icons/AssignmentTurnedIn';
 import MVTIcon from '@material-ui/icons/CallSplitOutlined';
+import NotificationIcon from '@material-ui/icons/NotificationImportantOutlined';
 import ServerCompIcon from '@material-ui/icons/Code';
 import ListDataIcon from '@material-ui/icons/List';
 import ResolveDataIcon from '@material-ui/icons/PlaylistAddCheck';
@@ -17,6 +18,10 @@ class TabUtilities extends PureComponent {
     try {
       window.chrome.runtime.sendMessage({ command: "upstreamEvent", type: "mvtQAToggle" + (flag === 1 ? "On" : "Off") })
     } catch (e) { }
+  }
+
+  onChangeNotifications(flag) {
+    this.props.setChromeStorage({ notifications: flag })
   }
 
   clickUtilityButton(utility, closeExtension) {
@@ -64,6 +69,17 @@ class TabUtilities extends PureComponent {
               icon={<ServerCompIcon />}
               onClick={() => this.clickUtilityButton('getServerComp', true)}
             />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} className={this.props.classes.notifications}>
+            <OFieldWrapper reference="notifications" adornmentIcon={<NotificationIcon color={(this.props.notifications ? "primary" : "")} />}>
+              <Typography variant="caption" className={`${this.props.classes.label} ${this.props.darkMode ? "dark" : ""}`}>Enable e.gif Notifications</Typography>
+              <ButtonGroup color="primary" disabled={!this.props.loaded} disableElevation fullWidth size="small">
+                <Button onClick={() => this.onChangeNotifications(1)} variant={this.props.notifications === 1 ? "contained" : "outlined"}>Enabled</Button>
+                <Button onClick={() => this.onChangeNotifications(0)} variant={this.props.notifications === 0 ? "contained" : "outlined"}>Disabled</Button>
+              </ButtonGroup>
+            </OFieldWrapper>
           </Grid>
         </Grid>
         <Grid container spacing={2}>

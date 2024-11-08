@@ -2,8 +2,7 @@
 export const ODeclarativeNetRequestManager = {
   rules: config => {
     const regexFilter = (config => {
-      const domain = config.setting.fpfrom?.length ? config.setting.fpfrom : config.defaultDomain;
-      const parts = domain.match(/^([^\.]+)\.([^\/]+)\/?(.*)/);
+      const parts = (config.setting.fpfrom?.length ? config.setting.fpfrom : config.defaultDomain).match(/^([^\.]+)\.([^\/]+)\/?(.*)/);
       let regexString;
       if (parts && parts[1] && parts[2]) {
         regexString = `^(http|https):\/\/(${parts[1]})(-test|\d{1})?\.(${parts[2].replace(".", "\.")})`;
@@ -16,17 +15,13 @@ export const ODeclarativeNetRequestManager = {
       return regexString;
     })(config);
     const regexSubstitution = (config => {
-      const isFirstParty = config.setting.fpfrom?.length;
       let regexString;
-      if (config.setting.fpto) {
-        if (isFirstParty) {
-          regexString = `\\1://\\2${config.setting.version === 1 ? `-test` : ``}.\\4${`/${config.setting.fpto}`.replace(/\/+/g, "/")}`;
-        } else {
-          regexString = `\\1://\\2${config.setting.version === 1 ? `-test` : ``}.\\4/${config.setting.account?.length ? config.setting.account : `\\5`}/${config.setting.space?.length ? (/^\*/.test(config.setting.space) ? `\\6${config.setting.space.replace("*", "")}` : config.setting.space) : `\\6\\7`}/Bootstrap.js`;
-        }
-        regexString += `?r=${Math.random().toString().substring(2, 6)}`;
+      if (config.setting.fpfrom?.length && config.setting.fpto?.length) {
+        regexString = `\\1://\\2${config.setting.version === 1 ? `-test` : ``}.\\4${`/${config.setting.fpto}`.replace(/\/+/g, "/")}`;
+      } else if (!config.setting.fpfrom?.length) {
+        regexString = `\\1://\\2${config.setting.version === 1 ? `-test` : ``}.\\4/${config.setting.account?.length ? config.setting.account : `\\5`}/${config.setting.space?.length ? (/^\*/.test(config.setting.space) ? `\\6${config.setting.space.replace("*", "")}` : config.setting.space) : `\\6\\7`}/Bootstrap.js`;
       }
-      return regexString;
+      return regexString ? `${regexString}?r=${Math.random().toString().substring(2, 6)}` : ``;
     })(config);
     if (!regexFilter || !regexSubstitution) return null;
     return {

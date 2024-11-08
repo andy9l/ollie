@@ -48,8 +48,11 @@ const styles = theme => ({
   tagVersion: {
     marginTop: -theme.spacing(2)
   },
-  mvt: {
+  notifications: {
     marginTop: theme.spacing(2)
+  },
+  mvt: {
+    marginTop: theme.spacing(1)
   },
 })
 
