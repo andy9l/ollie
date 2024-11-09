@@ -6,26 +6,14 @@ import OTab from './components/OTab';
 import TabRewrite from './containers/tab.rewrite';
 import TabUtilities from './containers/tab.utilities';
 import styles from './Popup.css';
-
-const StateStorageKeys = {
-  enabled: false,
-  space: "",
-  account: "",
-  fpfrom: "",
-  fpto: "",
-  version: 0,
-  blocking: false,
-  mvt: 0,
-  notifications: 0,
-  tab: 0,
-}
+import { Constants } from './constants';
 
 class Popup extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      ...StateStorageKeys,
+      ...Constants.storageKeys,
       loaded: false,
       toggleMouseDownTime: 0
     }
@@ -41,7 +29,8 @@ class Popup extends Component {
 
   refreshState() {
     try {
-      window.chrome.storage.local.get(Object.keys(StateStorageKeys), storage => this.setState({ ...storage, loaded: true }))
+      console.log("Refresh state called");
+      window.chrome.storage.local.get(Object.keys(Constants.storageKeys), storage => this.setState({ ...storage, loaded: true }))
     } catch (e) { }
   }
 

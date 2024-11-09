@@ -22,6 +22,7 @@ function copyExtensionJSFiles(cb) {
     `./src/service_worker.js`,
     `./src/content_script.js`,
     `./src/helper.js`,
+    `./src/constants.js`
   ])
     .pipe(uglify())
     .pipe(dest(`./release`))
