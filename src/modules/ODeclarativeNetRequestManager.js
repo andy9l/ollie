@@ -1,30 +1,27 @@
 import { Constants } from "../constants.js";
 
 const buildRegexFilter = config => {
-  const parts = (config.fpfrom?.length ? config.fpfrom : Constants.defaultDomain).match(/^([^\.]+)\.([^\/]+)\/?(.*)/);
   let regexString;
-  if (parts && parts[1] && parts[2]) {
-    regexString = `^(http|https):\/\/(${parts[1]})(-test|\d{1})?\.(${parts[2].replace(/\.+/g, "\.")})`;
-    if (!config.fpfrom?.length) {
-      regexString += `\/([^\/]+)\/([^\/]*?)(stage|prod)?\/?Bootstrap\.js$`;
-    } else if (parts[3]) {
-      regexString += `\/${parts[3]}\/?$`
+  try {
+    const [_, subdomain, domain] = (config.fpdomain?.length ? config.fpdomain : Constants.defaultDomain).match(/^([^\.]+)\.(.+)$/);
+    if (subdomain && domain) {
+      regexString = `^(http|https):\/\/(${subdomain})(-test|\d{1})?\.(${domain.replace(/\.+/g, "\.")})`;
+      if (!config.fpdomain?.length) regexString += `\/([^\/]+)\/([^\/]*?)(stage|prod)?\/?Bootstrap\.js$`;
+      else if (config.fpfrom?.length) regexString += `\/${config.fpfrom}\/?$`.replace(/\/+/g, "/");
     }
-  }
+  } catch (e) { }
   return regexString;
 };
 
 const buildRegexSubstitution = config => {
   let regexString;
-  if (config.fpfrom?.length && config.fpto?.length) {
+  if (config.fpdomain?.length && config.fpfrom?.length && config.fpto?.length)
     regexString = `\\1://\\2${config.version === 1 ? `-test` : ``}.\\4${`/${config.fpto}`.replace(/\/+/g, "/")}`;
-  } else if (!config.fpfrom?.length) {
+  else if (!config.fpdomain?.length)
     regexString = `\\1://\\2${config.version === 1 ? `-test` : ``}.\\4/${config.account?.length ? config.account : `\\5`}/${config.space?.length ? (/^\*/.test(config.space) ? `\\6${config.space.replace("*", "")}` : config.space) : `\\6\\7`}/Bootstrap.js`;
-  }
   return regexString ? `${regexString}?r=${Math.random().toString().substring(2, 6)}` : ``;
 };
 
-// Ugly and needs tidying
 export const ODeclarativeNetRequestManager = {
   rules: config => {
     const regexFilter = buildRegexFilter(config);

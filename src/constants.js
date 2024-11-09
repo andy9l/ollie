@@ -5,6 +5,7 @@ export const Constants ={
     enabled: false,
     space: "",
     account: "",
+    fpdomain: "",
     fpfrom: "",
     fpto: "",
     version: 0,

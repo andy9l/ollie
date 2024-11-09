@@ -46,7 +46,10 @@ const styles = theme => ({
     marginTop: theme.spacing(2)
   },
   tagVersion: {
-    marginTop: -theme.spacing(2)
+    marginTop: -theme.spacing(2),
+    "&.space": {
+      marginTop: theme.spacing(1)
+    }
   },
   notifications: {
     marginTop: theme.spacing(2)
