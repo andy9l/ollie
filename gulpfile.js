@@ -10,8 +10,7 @@ function cleanReleaseFolder(cb) {
 function copyPopupFiles(cb) {
   src([
     `./build/index.html`,
-    `./build/static/**/*.js`,
-    `!./build/static/**/runtime-*.js`
+    `./build/static/**/*.js`
   ], { base: './build' })
     .pipe(dest(`./release/popup`))
     .on('end', cb)
@@ -19,22 +18,13 @@ function copyPopupFiles(cb) {
 
 function copyExtensionJSFiles(cb) {
   src([
-    `./src/service_worker.js`,
-    `./src/content_script.js`,
-    `./src/helper.js`,
-    `./src/constants.js`
+    `./src/*.js`,
+    `./src/**/*.js`,
+    `!./src/popup/**/**`,
+    `!./src/index.js`,
   ])
     .pipe(uglify())
     .pipe(dest(`./release`))
-    .on('end', cb)
-}
-
-function copyModules(cb) {
-  src([
-    `./src/modules/*.js`
-  ])
-    .pipe(uglify())
-    .pipe(dest(`./release/modules`))
     .on('end', cb)
 }
 
@@ -50,4 +40,4 @@ function copyImages(cb) {
     .on('end', cb)
 }
 
-exports.default = series(cleanReleaseFolder, copyPopupFiles, copyExtensionJSFiles, copyModules, copyExtensionManifest, copyImages)
+exports.default = series(cleanReleaseFolder, copyPopupFiles, copyExtensionJSFiles, copyExtensionManifest, copyImages)

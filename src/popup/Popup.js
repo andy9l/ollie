@@ -6,7 +6,7 @@ import OTab from './components/OTab';
 import TabRewrite from './containers/tab.rewrite';
 import TabUtilities from './containers/tab.utilities';
 import styles from './Popup.css';
-import { Constants } from './constants';
+import { Constants } from '../constants';
 
 class Popup extends Component {
 
