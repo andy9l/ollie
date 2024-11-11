@@ -16,19 +16,12 @@ class TabUtilities extends PureComponent {
   onChangeMVT(flag) {
     this.props.setChromeStorage({ mvt: flag })
     try {
-      window.chrome.runtime.sendMessage({ command: "upstreamEvent", type: "mvtQAToggle" + (flag === 1 ? "On" : "Off") })
+      window.chrome.runtime.sendMessage({ command: "upstreamEvent", event_type: "mvtQAToggle" + (flag === 1 ? "On" : "Off") })
     } catch (e) { }
   }
 
   onChangeNotifications(flag) {
     this.props.setChromeStorage({ notifications: flag })
-  }
-
-  clickUtilityButton(utility, closeExtension) {
-    try {
-      window.chrome.runtime.sendMessage({ command: `upstreamEvent`, type: utility })
-      if (closeExtension) window.close()
-    } catch (e) { }
   }
 
   render() {
@@ -39,35 +32,35 @@ class TabUtilities extends PureComponent {
             <OUtilityButton
               title="List data"
               icon={<ListDataIcon />}
-              onClick={() => this.clickUtilityButton('listData', true)}
+              onClick={() => this.props.onClickUtilityButton('listData', true)}
             />
           </Grid>
           <Grid item xs={6}>
             <OUtilityButton
               title="Resolve data"
               icon={<ResolveDataIcon />}
-              onClick={() => this.clickUtilityButton('resolveData', true)}
+              onClick={() => this.props.onClickUtilityButton('resolveData', true)}
             />
           </Grid>
           <Grid item xs={6}>
             <OUtilityButton
               title="List tags"
               icon={<ListTagsIcon />}
-              onClick={() => this.clickUtilityButton('listTags', true)}
+              onClick={() => this.props.onClickUtilityButton('listTags', true)}
             />
           </Grid>
           <Grid item xs={6}>
             <OUtilityButton
               title="Test for tag"
               icon={<TestTagIcon />}
-              onClick={() => this.clickUtilityButton('testTag', true)}
+              onClick={() => this.props.onClickUtilityButton('testTag', true)}
             />
           </Grid>
           <Grid item xs={12}>
             <OUtilityButton
               title="Server Component parameters"
               icon={<ServerCompIcon />}
-              onClick={() => this.clickUtilityButton('getServerComp', true)}
+              onClick={() => this.props.onClickUtilityButton('getServerComp', true)}
             />
           </Grid>
         </Grid>

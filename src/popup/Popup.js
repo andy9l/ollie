@@ -7,6 +7,7 @@ import TabRewrite from './containers/tab.rewrite';
 import TabUtilities from './containers/tab.utilities';
 import styles from './Popup.css';
 import { Constants } from '../constants';
+import TabPrivacy from './containers/tab.privacy';
 
 class Popup extends Component {
 
@@ -22,14 +23,13 @@ class Popup extends Component {
   componentDidMount() {
     this.refreshState()
     try {
-      window.chrome.storage.onChanged.addListener(this.refreshState.bind(this));
-      window.chrome.runtime.sendMessage({ command: "upstreamEvent", type: "mvtQACheck" })
+      window.chrome.storage.onChanged.addListener(this.refreshState.bind(this))
+      window.chrome.runtime.sendMessage({ command: "upstreamEvent", event_type: "refreshPopupState" })
     } catch (e) { }
   }
 
   refreshState() {
     try {
-      console.log("Refresh state called");
       window.chrome.storage.local.get(Object.keys(Constants.storageKeys), storage => this.setState({ ...storage, loaded: true }))
     } catch (e) { }
   }
@@ -55,6 +55,13 @@ class Popup extends Component {
     this.setChromeStorage({ tab: tab })
   }
 
+  sendUpstreamEvent(event_type, closeExtension = false) {
+    try {
+      window.chrome.runtime.sendMessage({ command: `upstreamEvent`, event_type: event_type })
+      if (closeExtension) window.close()
+    } catch (e) { }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -78,6 +85,7 @@ class Popup extends Component {
             <Tabs variant="fullWidth" indicatorColor="primary" value={this.state.tab} onChange={this.onTabChange.bind(this)}>
               <Tab label="Rewrite" />
               <Tab label="Utilities" />
+              <Tab label="Privacy" />
             </Tabs>
           </Grid>
           <OTab hidden={this.state.tab !== 0}>
@@ -101,6 +109,16 @@ class Popup extends Component {
               mvt={this.state.mvt}
               notifications={this.state.notifications}
               setChromeStorage={this.setChromeStorage.bind(this)}
+              onClickUtilityButton={this.sendUpstreamEvent.bind(this)}
+            />
+          </OTab>
+          <OTab hidden={this.state.tab !== 2}>
+            <TabPrivacy
+              darkMode={this.props.darkMode}
+              loaded={this.state.loaded}
+              privacyPreferences={JSON.parse(this.state.privacyPreferences)}
+              onClickUtilityButton={this.sendUpstreamEvent.bind(this)}
+              onChangePreference={this.sendUpstreamEvent.bind(this)}
             />
           </OTab>
         </Grid>

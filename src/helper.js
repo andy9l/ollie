@@ -6,14 +6,22 @@ window.ollieHelper = (() => {
     mvtQAKey: `__MVT_QA__`
   }
 
+  _private.dispatchUpstreamEvent = detail => window.dispatchEvent(new CustomEvent(`ollie.Event.Upstream`, { detail: detail }));
+
   _private.eventListeners = {
 
     upstream: {
 
-      mvtQACheck: e => {
-        const event = localStorage[_private.store.mvtQAKey] == 1 ? `Enabled` : `Disabled`;
-        window.dispatchEvent(new CustomEvent(`ollie.Event.Upstream`, { detail: { event_type: `mvtQA${event}` } }));
+      mvtQACheck: () => {
+        _private.dispatchUpstreamEvent({ event_type: `mvtQA`, payload: localStorage[_private.store.mvtQAKey] });
+      },
+
+      privacyPreferencesCheck: () => {
+        let payload = false;
+        try { payload = JSON.stringify(window.Bootstrapper.gateway.getUserPreferences()); } catch (e) { }
+        _private.dispatchUpstreamEvent({ event_type: `privacyPreferences`, payload: payload });
       }
+
     },
 
     downstream: {
@@ -78,7 +86,7 @@ window.ollieHelper = (() => {
         const sc = document.head.querySelector(`script[src*='serverComponent.php']`);
         if (sc !== null) {
           console.log(`Server Component URL:\n${sc.src}\n\nServer Component Parameters:`);
-          console.table(unescape(sc.src).replace(/.+\?(.+)/, `$1`).split(`&`).map(keyVal => {
+          console.table(decodeURI(sc.src).replace(/.+\?(.+)/, `$1`).split(`&`).map(keyVal => {
             const pair = keyVal.split(`=`);
             return { param: pair[0], value: pair[1] }
           }));
@@ -90,16 +98,37 @@ window.ollieHelper = (() => {
       mvtQAToggleOn: e => {
         localStorage[_private.store.mvtQAKey] = 1;
         _private.eventListeners.upstream.mvtQACheck();
-        // setTimeout(() => window.location.reload(), 250);
       },
 
       mvtQAToggleOff: e => {
         localStorage[_private.store.mvtQAKey] = 0;
         _private.eventListeners.upstream.mvtQACheck();
-        // setTimeout(() => window.location.reload(), 250);
       },
 
-      mvtQACheck: e => _private.eventListeners.upstream.mvtQACheck()
+      privacyPreferenceToggle: (preference, flag) => {
+        try {
+          const change = window.Bootstrapper.gateway.setConsentStatus(preference, flag);
+          if (typeof change?.then === "function") change.then(_private.eventListeners.upstream.privacyPreferencesCheck);
+          else _private.eventListeners.upstream.privacyPreferencesCheck();
+        } catch (e) { }
+      },
+
+      openBanner: () => {
+        try {
+          window.Bootstrapper.gateway.openBanner();
+        } catch (e) { }
+      },
+
+      openModal: () => {
+        try {
+          window.Bootstrapper.gateway.openModal();
+        } catch (e) { }
+      },
+
+      refreshPopupState: () => {
+        _private.eventListeners.upstream.privacyPreferencesCheck();
+        _private.eventListeners.upstream.mvtQACheck();
+      }
 
     }
   };
@@ -108,11 +137,14 @@ window.ollieHelper = (() => {
     Object.keys(_private.eventListeners.downstream).forEach(key => {
       window.addEventListener(`ollie.Event.Downstream.${key}`, _private.eventListeners.downstream[key]);
     });
+    Object.keys(window.Bootstrapper?.gateway?.getUserPreferences() || {})?.map(preference => {
+      window.addEventListener(`ollie.Event.Downstream.Privacy.${preference}.On`, () => _private.eventListeners.downstream.privacyPreferenceToggle(preference, 1));
+      window.addEventListener(`ollie.Event.Downstream.Privacy.${preference}.Off`, () => _private.eventListeners.downstream.privacyPreferenceToggle(preference, 0));
+    });
   };
 
   _private.init = () => {
     _private.attachEventListeners();
-    _private.eventListeners.upstream.mvtQACheck();
   };
 
   _private.init();

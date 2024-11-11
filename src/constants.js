@@ -12,6 +12,7 @@ export const Constants ={
     blocking: false,
     mvt: 0,
     notifications: 0,
+    privacyPreferences: false,
     tab: 0
   }
 }

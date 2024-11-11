@@ -36,6 +36,12 @@ const styles = theme => ({
       }
     }
   },
+  privacyPreferenceRowContainer: {
+    marginTop: theme.spacing(2)
+  },
+  privacyPreferenceLabelError: {
+    fontWeight: 700
+  },
   spaceChips: {
     marginTop: "0.35em",
     "& > div:first-child": {

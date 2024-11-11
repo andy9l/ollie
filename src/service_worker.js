@@ -3,7 +3,7 @@ import { OUtilities } from "./modules/OUtilities.js";
 import { ODeclarativeNetRequestManager } from "./modules/ODeclarativeNetRequestManager.js";
 import { Constants } from "./constants.js";
 
-let config = {};
+let config = Constants.storageKeys;
 
 chrome.webNavigation.onBeforeNavigate.addListener(navigationDetails => navigationDetails.frameId === 0 && ODeclarativeNetRequestManager.updateDynamicRules(config));
 
@@ -22,9 +22,13 @@ chrome.webRequest.onBeforeRequest.addListener(
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.command === `upstreamEvent`) {
     chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
-      if (sender?.tab?.id === tabs[0]?.id && /mvtQA(Enabled|Disabled)/.test(message.type))
-        chrome.storage.local.set({ mvt: message.type === `mvtQAEnabled` ? 1 : 0 });
-      else chrome.tabs.sendMessage(tabs[0]?.id, { command: `downstreamEvent`, type: message.type });
+      if (sender?.tab?.id === tabs[0]?.id) {
+        if (message.event_type === "mvtQA")
+          chrome.storage.local.set({ mvt: message.payload == 1 ? 1 : 0 });
+        else if (message.event_type === "privacyPreferences")
+          chrome.storage.local.set({ privacyPreferences: message.payload });
+      } else
+        chrome.tabs.sendMessage(tabs[0]?.id, { ...message, command: `downstreamEvent` });
     });
   }
 });
