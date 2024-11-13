@@ -26,30 +26,30 @@ export const ODeclarativeNetRequestManager = {
   rules: config => {
     const regexFilter = buildRegexFilter(config);
     const regexSubstitution = buildRegexSubstitution(config)
-    if (!regexFilter || !regexSubstitution) return null;
-    return {
-      block: {
-        "action": {
-          "type": "block"
-        },
-        "condition": {
-          "regexFilter": regexFilter,
-          "resourceTypes": ["script"]
-        }
-      },
-      redirect: {
-        "action": {
-          "type": "redirect",
-          "redirect": {
-            "regexSubstitution": regexSubstitution
+    return (!regexFilter || !regexSubstitution) ? null :
+      {
+        block: {
+          "action": {
+            "type": "block"
+          },
+          "condition": {
+            "regexFilter": regexFilter,
+            "resourceTypes": ["script"]
           }
         },
-        "condition": {
-          "regexFilter": regexFilter,
-          "resourceTypes": ["script"]
+        redirect: {
+          "action": {
+            "type": "redirect",
+            "redirect": {
+              "regexSubstitution": regexSubstitution
+            }
+          },
+          "condition": {
+            "regexFilter": regexFilter,
+            "resourceTypes": ["script"]
+          }
         }
       }
-    }
   },
   updateDynamicRules: async config => {
     const oldRules = await chrome.declarativeNetRequest.getDynamicRules();

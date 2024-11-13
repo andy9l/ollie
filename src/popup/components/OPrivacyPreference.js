@@ -1,6 +1,7 @@
 import { Box, Button, ButtonGroup, Grid, Typography, withStyles } from '@material-ui/core';
 import React, { PureComponent } from 'react';
-import PreferenceIcon from '@material-ui/icons/LabelImportantOutlined';
+import PreferenceOnIcon from '@material-ui/icons/CheckCircleOutline';
+import PreferenceOffIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 const styles = theme => ({
   privacyPreferenceRow: {
@@ -8,7 +9,12 @@ const styles = theme => ({
     alignItems: "center"
   },
   privacyPreferenceIcon: {
-    paddingRight: theme.spacing(0.5)
+    paddingRight: theme.spacing(0.75),
+    cursor: "pointer"
+  },
+  privacyPreferenceIconSvg: {
+    width: "0.85em",
+    height: "0.85em"
   },
   privacyPreferenceLabel: {
     color: "rgba(0, 0, 0, 0.54)",
@@ -20,8 +26,8 @@ const styles = theme => ({
 
 class OPrivacyPreference extends PureComponent {
 
-  onChangePrivacyPreference(preference, flag) {
-    this.props.onChangePreference(`Privacy.${preference}.${flag == 1 ? "On" : "Off"}`);
+  togglePrivacyPreference() {
+    this.props.onChangePreference(`Privacy.${this.props.preference}.${this.props.preferenceValue == 0 ? "On" : "Off"}`);
   }
 
   render() {
@@ -29,16 +35,20 @@ class OPrivacyPreference extends PureComponent {
       <Grid container className={this.props.classes.privacyPreferenceRow}>
         <Grid item xs={9}>
           <Box display="flex" flexDirection="row" alignItems="center">
-            <Box display="flex" className={this.props.classes.privacyPreferenceIcon}>
-              <PreferenceIcon color={this.props.preferenceValue == 1 ? "primary" : "secondary"} fontSize="0.7em" />
+            <Box display="flex" className={this.props.classes.privacyPreferenceIcon} onClick={this.togglePrivacyPreference.bind(this)}>
+              {this.props.preferenceValue == 1 ?
+                <PreferenceOnIcon color="primary" className={this.props.classes.privacyPreferenceIconSvg} />
+                :
+                <PreferenceOffIcon color="secondary" className={this.props.classes.privacyPreferenceIconSvg} />
+              }
             </Box>
             <Typography className={`${this.props.classes.privacyPreferenceLabel} ${this.props.darkMode ? "dark" : ""}`}>{this.props.preference}</Typography>
           </Box>
         </Grid>
         <Grid item xs={3}>
           <ButtonGroup color={this.props.preferenceValue == 1 ? "primary" : "secondary"} disableElevation fullWidth size="small">
-            <Button onClick={() => this.onChangePrivacyPreference(this.props.preference, this.props.preferenceValue == 1 ? 0 : 1)} variant={this.props.preferenceValue == 1 ? "contained" : "outlined"}>|</Button>
-            <Button onClick={() => this.onChangePrivacyPreference(this.props.preference, this.props.preferenceValue == 1 ? 0 : 1)} variant={this.props.preferenceValue == 0 ? "contained" : "outlined"}>0</Button>
+            <Button onClick={this.togglePrivacyPreference.bind(this)} variant={this.props.preferenceValue == 1 ? "contained" : "outlined"}>|</Button>
+            <Button onClick={this.togglePrivacyPreference.bind(this)} variant={this.props.preferenceValue == 0 ? "contained" : "outlined"}>0</Button>
           </ButtonGroup>
         </Grid>
       </Grid>

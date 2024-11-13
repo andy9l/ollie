@@ -65,7 +65,7 @@ class Popup extends Component {
   render() {
     return (
       <React.Fragment>
-        <Grid container justify="center" className={`${this.props.classes.wrapper} ${this.props.darkMode ? "dark" : ""}`}>
+        <Grid container justifyContent="center" className={`${this.props.classes.wrapper} ${this.props.darkMode ? "dark" : ""}`}>
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center">
               <Tooltip title={`${this.state.enabled ? (this.state.blocking ? 'Blocking' : 'Enabled') : 'Disabled'}`} placement="right">

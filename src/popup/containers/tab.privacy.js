@@ -1,7 +1,8 @@
 import { Box, Grid, Typography, withStyles } from '@material-ui/core';
+import OptInIcon from '@material-ui/icons/CheckCircleOutline';
 import OpenBannerIcon from '@material-ui/icons/MenuOpen';
+import OptOutIcon from '@material-ui/icons/RadioButtonUncheckedOutlined';
 import OpenModalIcon from '@material-ui/icons/Tune';
-
 import React, { PureComponent } from 'react';
 import OPrivacyPreference from '../components/OPrivacyPreference';
 import OUtilityButton from '../components/OUtilityButton';
@@ -27,6 +28,21 @@ class TabPrivacy extends PureComponent {
                     title="Open Modal"
                     icon={<OpenModalIcon />}
                     onClick={() => this.props.onClickUtilityButton('openModal', true)}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <OUtilityButton
+                    title="Opt-in All"
+                    icon={<OptInIcon />}
+                    onClick={() => this.props.onClickUtilityButton('optInAll')}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <OUtilityButton
+                    title="Opt-out All"
+                    color="secondary"
+                    icon={<OptOutIcon />}
+                    onClick={() => this.props.onClickUtilityButton('optOutAll')}
                   />
                 </Grid>
               </Grid>

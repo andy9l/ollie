@@ -17,9 +17,14 @@ window.ollieHelper = (() => {
       },
 
       privacyPreferencesCheck: () => {
-        let payload = false;
-        try { payload = JSON.stringify(window.Bootstrapper.gateway.getUserPreferences()); } catch (e) { }
-        _private.dispatchUpstreamEvent({ event_type: `privacyPreferences`, payload: payload });
+        let payload = {};
+        try {
+          const consentStatus = window.Bootstrapper.gateway.getConsentStatus();
+          Object.keys(consentStatus).map(category => {
+            payload[category] = consentStatus[category].categoryEnabled ? 1 : 0
+          });
+        } catch (e) { }
+        _private.dispatchUpstreamEvent({ event_type: `privacyPreferences`, payload: Object.keys(payload).length ? JSON.stringify(payload) : false });
       }
 
     },
@@ -125,6 +130,22 @@ window.ollieHelper = (() => {
         } catch (e) { }
       },
 
+      optInAll: () => {
+        try {
+          Object.keys(window.Bootstrapper?.gateway?.getConsentStatus() || {})
+            .map(preference => _private.eventListeners.downstream.privacyPreferenceToggle(preference, 1));
+        } catch (e) { }
+        _private.eventListeners.upstream.privacyPreferencesCheck();
+      },
+
+      optOutAll: () => {
+        try {
+          Object.keys(window.Bootstrapper?.gateway?.getConsentStatus() || {})
+            .map(preference => _private.eventListeners.downstream.privacyPreferenceToggle(preference, 0));
+        } catch (e) { }
+        _private.eventListeners.upstream.privacyPreferencesCheck();
+      },
+
       refreshPopupState: () => {
         _private.eventListeners.upstream.privacyPreferencesCheck();
         _private.eventListeners.upstream.mvtQACheck();
@@ -137,7 +158,7 @@ window.ollieHelper = (() => {
     Object.keys(_private.eventListeners.downstream).forEach(key => {
       window.addEventListener(`ollie.Event.Downstream.${key}`, _private.eventListeners.downstream[key]);
     });
-    Object.keys(window.Bootstrapper?.gateway?.getUserPreferences() || {})?.map(preference => {
+    Object.keys(window.Bootstrapper?.gateway?.getConsentStatus() || {}).map(preference => {
       window.addEventListener(`ollie.Event.Downstream.Privacy.${preference}.On`, () => _private.eventListeners.downstream.privacyPreferenceToggle(preference, 1));
       window.addEventListener(`ollie.Event.Downstream.Privacy.${preference}.Off`, () => _private.eventListeners.downstream.privacyPreferenceToggle(preference, 0));
     });

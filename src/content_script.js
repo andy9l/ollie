@@ -2,7 +2,7 @@ window.addEventListener(`ollie.Event.Upstream`, e => {
   chrome.runtime.sendMessage({ command: `upstreamEvent`, ...e.detail });
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(message => {
   if (message?.command === `downstreamEvent` && typeof message?.event_type !== `undefined`) {
     window.dispatchEvent(new CustomEvent(`ollie.Event.Downstream.${message.event_type}`));
   }
